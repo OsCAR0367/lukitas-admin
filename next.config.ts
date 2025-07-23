@@ -1,13 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Agregar si tienes problemas con ESLint en build
+  // Configuración optimizada para producción
+  output: 'standalone',
+  
+  // Solo ignorar errores si es absolutamente necesario
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false, // Mejor práctica: resolver errores de ESLint
   },
-  // Si tienes problemas con TypeScript
+  
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false, // Mejor práctica: resolver errores de TypeScript
+  },
+  
+  // Optimizaciones para producción
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
+  
+  // Configuración de imágenes si usas next/image
+  images: {
+    unoptimized: false,
+    remotePatterns: [],
   },
 }
 
-module.exports = nextConfig
+export default nextConfig

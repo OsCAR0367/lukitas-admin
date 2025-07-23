@@ -22,9 +22,25 @@ import {
   Campana
 } from '../lib/supabase'
 
+interface CampaignSubmitData {
+  user_id: number
+  nombre: string
+  descripcion: string
+  fecha_inicio: string
+  fecha_fin: string
+  lugar: string
+  presupuesto: number
+  estado: boolean
+}
+
+interface EditingState {
+  isNew?: boolean
+  [key: string]: unknown
+}
+
 interface CampaignModalProps {
   onClose: () => void
-  onSubmit: (data: any) => void
+  onSubmit: (data: CampaignSubmitData) => void
 }
 
 function CampaignModal({ onClose, onSubmit }: CampaignModalProps) {
@@ -216,7 +232,7 @@ export default function AdminDashboard() {
   const [campanas, setCampanas] = useState<Campana[]>([])
   const [activeTab, setActiveTab] = useState('users')
   const [loading, setLoading] = useState(true)
-  const [editingItem, setEditingItem] = useState<any>(null)
+  const [editingItem, setEditingItem] = useState<EditingState | null>(null)
 
   useEffect(() => {
     loadData()
@@ -271,9 +287,15 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleCreateCampana = async (campanaData: any) => {
+  const handleCreateCampana = async (campanaData: CampaignSubmitData) => {
     try {
-      const result = await createNewCampana(campanaData)
+      // Convertir el presupuesto de string a number
+      const campanaForDB = {
+        ...campanaData,
+        presupuesto: campanaData.presupuesto
+      }
+      
+      const result = await createNewCampana(campanaForDB)
       
       if (result) {
         // Recargar datos para obtener la campaña recién creada
